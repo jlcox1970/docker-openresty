@@ -127,6 +127,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
       -Wl,-rpath,/usr/local/openresty/openssl/lib \
     && make -j${RESTY_J} \
     && make -j${RESTY_J} install_sw \
+    && cd / \
+    && apt install git -y && git clone https://github.com/vozlt/nginx-module-vts.git \
     && cd /tmp \
     && curl -fSL https://downloads.sourceforge.net/project/pcre/pcre/${RESTY_PCRE_VERSION}/pcre-${RESTY_PCRE_VERSION}.tar.gz -o pcre-${RESTY_PCRE_VERSION}.tar.gz \
     && echo "${RESTY_PCRE_SHA256}  pcre-${RESTY_PCRE_VERSION}.tar.gz" | shasum -a 256 --check \
@@ -144,7 +146,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update \
     && curl -fSL https://openresty.org/download/openresty-${RESTY_VERSION}.tar.gz -o openresty-${RESTY_VERSION}.tar.gz \
     && tar xzf openresty-${RESTY_VERSION}.tar.gz \
     && cd /tmp/openresty-${RESTY_VERSION} \
-    && eval ./configure -j${RESTY_J} ${_RESTY_CONFIG_DEPS} ${RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS_MORE} ${RESTY_LUAJIT_OPTIONS} ${RESTY_PCRE_OPTIONS} \
+    && eval ./configure -j${RESTY_J} ${_RESTY_CONFIG_DEPS} ${RESTY_CONFIG_OPTIONS} ${RESTY_CONFIG_OPTIONS_MORE} ${RESTY_LUAJIT_OPTIONS} ${RESTY_PCRE_OPTIONS} --add-module=/nginx-module-vts \
     && make -j${RESTY_J} \
     && make -j${RESTY_J} install \
     && cd /tmp \
